@@ -1,0 +1,43 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "tYE4GsKPCCnrefKcboWhj8LhAKE=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "f4ee69125072b22721efbe639bd0da9c9d19b8cc",
+			"revisionTime": "2018-02-28T22:01:33Z"
+		},
+		{
+			"checksumSHA1": "soj1/h6iVHi374+fARPRCLXvnTk=",
+			"path": "github.com/natefinch/lumberjack",
+			"revision": "aee4629129445bbdfb69aa565537dcfa16544311",
+			"revisionTime": "2017-09-11T14:04:57Z"
+		},
+		{
+			"checksumSHA1": "6U7dCaxxIMjf5V02iWgyAwppczw=",
+			"path": "golang.org/x/crypto/ssh/terminal",
+			"revision": "91a49db82a88618983a78a06c1cbd4e00ab749ab",
+			"revisionTime": "2018-02-28T15:18:34Z"
+		},
+		{
+			"checksumSHA1": "+UMEPHX8wvMkCxa+ofAmBKlqdYg=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "f6cff0780e542efa0c8e864dc8fa522808f6a598",
+			"revisionTime": "2018-02-20T20:26:15Z"
+		},
+		{
+			"checksumSHA1": "eQq+ZoTWPjyizS9XalhZwfGjQao=",
+			"path": "golang.org/x/sys/windows",
+			"revision": "f6cff0780e542efa0c8e864dc8fa522808f6a598",
+			"revisionTime": "2018-02-20T20:26:15Z"
+		},
+		{
+			"checksumSHA1": "uja6BKCN3ngSeXQE7te2vq4bKro=",
+			"path": "gopkg.in/urfave/cli.v1",
+			"revision": "cfb38830724cc34fedffe9a2a29fb54fa9169cd1",
+			"revisionTime": "2017-08-11T01:42:03Z"
+		}
+	],
+	"rootPath": "seth"
+}
