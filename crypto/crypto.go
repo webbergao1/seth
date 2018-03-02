@@ -3,11 +3,10 @@ package crypto
 import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
+	"seth/common"
+	"seth/common/math"
 	"seth/crypto/secp256k1"
 	"seth/crypto/sha3"
-
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/common/math"
 )
 
 // Keccak256 Calculates and returns the Keccak256 hash of the input data.
