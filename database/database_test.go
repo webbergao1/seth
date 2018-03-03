@@ -18,4 +18,6 @@ func Test_database(t *testing.T) {
 	} else {
 		fmt.Println(db.Name())
 	}
+	db, err = database.GetDatabase("mysql")
+
 }

@@ -21,7 +21,7 @@ func prepareDbFolder(pathRoot string, subDir string) string {
 }
 
 func newDbInstance(dbPath string) database.Database {
-	db, err := NewLevelDB(dbPath, 16, 16)
+	db, err := NewLevelDB(dbPath, 0, 0)
 	if err != nil {
 		panic(err)
 	}
