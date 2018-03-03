@@ -127,8 +127,9 @@ func (db *levelDB) DeleteSring(key string) error {
 // NewBatch new a batch operator
 func (db *levelDB) NewBatch() database.Batch {
 	batch := &Batch{
-		db:    db.db,
-		batch: new(leveldb.Batch),
+		db:      db,
+		leveldb: db.db,
+		batch:   new(leveldb.Batch),
 	}
 	return batch
 }

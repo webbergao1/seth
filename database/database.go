@@ -28,6 +28,7 @@ type Batch interface {
 	Commit() error
 	Rollback()
 	Close()
+	Database() Database
 }
 
 var dbs = map[string]Database{}

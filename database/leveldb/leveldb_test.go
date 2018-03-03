@@ -29,8 +29,6 @@ func newDbInstance(dbPath string) database.Database {
 	return db
 }
 
-var testvalues = []string{"", "a", "1251", "\x00123\x00"}
-
 func newTestLevelDB() (database.Database, func()) {
 	dir := prepareDbFolder("", "leveldbtest")
 	db := newDbInstance(dir)
@@ -39,6 +37,8 @@ func newTestLevelDB() (database.Database, func()) {
 		os.RemoveAll(dir)
 	}
 }
+
+var testvalues = []string{"", "a", "1251", "\x00123\x00"}
 
 func testPutGet(db database.Database, t *testing.T) {
 

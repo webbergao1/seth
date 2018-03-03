@@ -1,11 +1,16 @@
 package leveldb
 
-import "github.com/syndtr/goleveldb/leveldb"
+import (
+	"seth/database"
+
+	"github.com/syndtr/goleveldb/leveldb"
+)
 
 // Batch batch implenent for leveldb
 type Batch struct {
-	db    *leveldb.DB
-	batch *leveldb.Batch
+	db      database.Database
+	leveldb *leveldb.DB
+	batch   *leveldb.Batch
 }
 
 // Put sets the value for the given key
@@ -25,7 +30,7 @@ func (b *Batch) Delete(key []byte) {
 // Commit commit batch operator.
 func (b *Batch) Commit() error {
 
-	return b.db.Write(b.batch, nil)
+	return b.leveldb.Write(b.batch, nil)
 }
 
 // Rollback rollback batch operator.
@@ -38,4 +43,9 @@ func (b *Batch) Rollback() {
 func (b *Batch) Close() {
 
 	b.batch.Reset()
+}
+
+// Database get database interface
+func (b *Batch) Database() database.Database {
+	return b.db
 }
