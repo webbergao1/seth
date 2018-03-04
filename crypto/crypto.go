@@ -5,6 +5,7 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"fmt"
+	"math/big"
 	"seth/common"
 	"seth/common/math"
 	"seth/crypto/secp256k1"
@@ -19,6 +20,8 @@ const (
 
 var (
 	emptySignature = Signature{}
+	secp256k1N, _  = new(big.Int).SetString("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", 16)
+	secp256k1halfN = new(big.Int).Div(secp256k1N, big.NewInt(2))
 )
 
 type (
@@ -84,6 +87,21 @@ func RlpHash(x interface{}) (h common.Hash) {
 	return h
 }
 
+// ValidateSignatureValues verifies whether the signature values are valid with
+// the given chain rules. The v value is assumed to be either 0 or 1.
+func ValidateSignatureValues(v byte, r, s *big.Int) bool {
+	if r.Cmp(common.Big1) < 0 || s.Cmp(common.Big1) < 0 {
+		return false
+	}
+	// reject upper range of s values (ECDSA malleability)
+	// see discussion in secp256k1/libsecp256k1/include/secp256k1.h
+	if s.Cmp(secp256k1halfN) > 0 {
+		return false
+	}
+
+	return r.Cmp(secp256k1N) < 0 && s.Cmp(secp256k1N) < 0 && (v == 0 || v == 1)
+}
+
 // GenerateKey returns a random PrivateKey
 func GenerateKey() (*PrivateKey, error) {
 	priv, err := ecdsa.GenerateKey(S256(), rand.Reader)
@@ -96,6 +114,11 @@ func GenerateKey() (*PrivateKey, error) {
 // GetBytes get the actual bytes of ecdsa privatekey
 func (priv *PrivateKey) GetBytes() []byte {
 	return FromECDSA((*ecdsa.PrivateKey)(priv))
+}
+
+// GetPublicKey return the public key
+func (priv *PrivateKey) GetPublicKey() *PublicKey {
+	return (*PublicKey)(&priv.PublicKey)
 }
 
 // Sign signs the hash and returns the signature
@@ -119,11 +142,11 @@ func (sig *Signature) SetBytes(data []byte, compressed bool) {
 	if len(data) == 65 {
 		copy(sig[:], data[:])
 	}
+}
 
-	sig[64] += 27
-	if compressed {
-		sig[64] += 4
-	}
+// RSV returns the r s v values
+func (sig *Signature) RSV() (v, r, s *big.Int) {
+	return new(big.Int).SetBytes(sig[:32]), new(big.Int).SetBytes(sig[32:64]), big.NewInt(int64(sig[64]))
 }
 
 func zeroBytes(bytes []byte) {
