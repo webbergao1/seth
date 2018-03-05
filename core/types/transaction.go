@@ -91,3 +91,6 @@ func (tx *Transaction) ChainID() *big.Int {
 	_, _, V := tx.Data.Signature.RSV()
 	return deriveChainID(V)
 }
+
+// Transactions is a Transaction slice type
+type Transactions []*Transaction

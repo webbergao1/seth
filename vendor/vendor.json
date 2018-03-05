@@ -51,6 +51,24 @@
 			"revisionTime": "2018-02-17T13:45:45Z"
 		},
 		{
+			"checksumSHA1": "i/HWCPddfU9O89OQWF4DJLc/xYY=",
+			"path": "github.com/naoina/go-stringutil",
+			"revision": "6b638e95a32d0c1131db0e7fe83775cbea4a0d0b",
+			"revisionTime": "2015-11-18T23:44:43Z"
+		},
+		{
+			"checksumSHA1": "yvNNZMRd8CFXKiYjFPQ+Di4IjyU=",
+			"path": "github.com/naoina/toml",
+			"revision": "9fafd69674167c06933b1787ae235618431ce87f",
+			"revisionTime": "2017-09-18T21:04:37Z"
+		},
+		{
+			"checksumSHA1": "iftt4kOKWX5hdwgXA31rx9D2/Po=",
+			"path": "github.com/naoina/toml/ast",
+			"revision": "9fafd69674167c06933b1787ae235618431ce87f",
+			"revisionTime": "2017-09-18T21:04:37Z"
+		},
+		{
 			"checksumSHA1": "soj1/h6iVHi374+fARPRCLXvnTk=",
 			"path": "github.com/natefinch/lumberjack",
 			"revision": "aee4629129445bbdfb69aa565537dcfa16544311",

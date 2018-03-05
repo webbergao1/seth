@@ -1,0 +1,49 @@
+package config
+
+import (
+	"errors"
+	"os"
+	"path/filepath"
+	"seth/log"
+
+	"github.com/naoina/toml"
+)
+
+// SethConfigFile seth config file name
+const SethConfigFile = "seth.conf"
+
+// Config var for config
+var Config _Config
+
+// _Config config for App
+type _Config struct {
+	DataDir string `toml:"datadir"`
+}
+
+func init() {
+	workPath, err := os.Getwd()
+	if err != nil {
+		log.Panic(err)
+	}
+	configFilePath := filepath.Join(workPath, "conf", SethConfigFile)
+	LoadConfig(configFilePath)
+}
+
+// LoadConfig load config file
+func LoadConfig(filepath string) error {
+	file, err := os.Open(filepath)
+	if err != nil {
+		log.Warn("can't load seth.conf file")
+		return err
+	}
+	defer file.Close()
+
+	err = toml.NewDecoder(file).Decode(&Config)
+
+	if _, ok := err.(*toml.LineError); ok {
+		err = errors.New(filepath + ", " + err.Error())
+	}
+	log.Info("DataDir: %s", Config.DataDir)
+	return err
+
+}
