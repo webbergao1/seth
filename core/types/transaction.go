@@ -27,8 +27,11 @@ type txData struct {
 func NewTransaction(to common.Address, amount *big.Int, nonce uint64) *Transaction {
 	txdata := &txData{
 		To:           &to,
-		Amount:       amount,
+		Amount:       new(big.Int),
 		AccountNonce: nonce,
+	}
+	if amount != nil {
+		txdata.Amount.Set(amount)
 	}
 
 	return &Transaction{Data: txdata}
@@ -49,8 +52,8 @@ func (tx *Transaction) Hash() common.Hash {
 	return v
 }
 
-// SignTx sign transaction
-func (tx *Transaction) SignTx(signer Signer, privatekey *crypto.PrivateKey) error {
+// Sign sign transaction
+func (tx *Transaction) Sign(signer Signer, privatekey *crypto.PrivateKey) error {
 	h := signer.Hash(tx)
 	sig, err := privatekey.Sign(h[:])
 	if err != nil {
@@ -58,6 +61,16 @@ func (tx *Transaction) SignTx(signer Signer, privatekey *crypto.PrivateKey) erro
 	}
 	tx.Data.Signature = signer.SignatureValues(sig)
 	return nil
+}
+
+// Verify verify the transaction with signer
+func (tx *Transaction) Verify(signer Signer) bool {
+	h := signer.Hash(tx)
+	publickey, err := signer.PublicKey(tx)
+	if err != nil {
+		return false
+	}
+	return tx.Data.Signature.Verify(publickey, h[:])
 }
 
 // Sender return tx sender

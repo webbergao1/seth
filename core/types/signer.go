@@ -28,6 +28,8 @@ var (
 type Signer interface {
 	// Sender returns the sender address of the transaction.
 	Sender(tx *Transaction) (common.Address, error)
+	// PublicKey returns the public key of the transaction.
+	PublicKey(tx *Transaction) (*crypto.PublicKey, error)
 	// SignatureValues returns the *crypto.Signature values corresponding to the
 	// given signature.
 	SignatureValues(sign *crypto.Signature) *crypto.Signature
@@ -70,7 +72,32 @@ func (ss SethSigner) Sender(tx *Transaction) (common.Address, error) {
 		V.Sub(V, ss.chainIDMul)
 		V.Sub(V, bigMagicNumberForV)
 	}
-	return recoverPlain(ss.Hash(tx), R, S, V)
+	pub, err := recoverPlain(ss.Hash(tx), R, S, V)
+	if err != nil {
+		return common.Address{}, err
+	}
+	if len(pub) == 0 || pub[0] != 4 {
+		return common.Address{}, ErrInvalidPublicKey
+	}
+	return crypto.PubkeyToAddress(crypto.ToECDSAPub(pub)), nil
+}
+
+// PublicKey returns the public key of the transaction.
+func (ss SethSigner) PublicKey(tx *Transaction) (*crypto.PublicKey, error) {
+	if tx.ChainID().Cmp(ss.chainID) != 0 {
+		return nil, ErrInvalidChainID
+	}
+	R, S, V := tx.Data.Signature.RSV()
+	if ss.chainID.Sign() != 0 {
+		V.Sub(V, ss.chainIDMul)
+		V.Sub(V, bigMagicNumberForV)
+	}
+	pub, err := recoverPlain(ss.Hash(tx), R, S, V)
+	if err != nil {
+		return nil, err
+	}
+	return (*crypto.PublicKey)(crypto.ToECDSAPub(pub)), nil
+
 }
 
 // Hash returns the hash to be signed.
@@ -83,13 +110,13 @@ func (ss SethSigner) Hash(tx *Transaction) common.Hash {
 	})
 }
 
-func recoverPlain(sighash common.Hash, R, S, V *big.Int) (common.Address, error) {
+func recoverPlain(sighash common.Hash, R, S, V *big.Int) ([]byte, error) {
 	if V.BitLen() > 8 {
-		return common.Address{}, ErrInvalidSig
+		return nil, ErrInvalidSig
 	}
 	v := byte(V.Uint64())
 	if !crypto.ValidateSignatureValues(v, R, S) {
-		return common.Address{}, ErrInvalidSig
+		return nil, ErrInvalidSig
 	}
 	// encode the snature in uncompressed format
 	r, s := R.Bytes(), S.Bytes()
@@ -99,15 +126,7 @@ func recoverPlain(sighash common.Hash, R, S, V *big.Int) (common.Address, error)
 	sig[64] = v
 	// recover the public key from the snature
 	pub, err := crypto.Ecrecover(sighash[:], sig)
-	if err != nil {
-		return common.Address{}, err
-	}
-	if len(pub) == 0 || pub[0] != 4 {
-		return common.Address{}, ErrInvalidPublicKey
-	}
-	var addr common.Address
-	copy(addr[:], crypto.Keccak256(pub[1:])[12:])
-	return addr, nil
+	return pub, err
 }
 
 // SignatureValues returns the crypto.Signature values corresponding to the

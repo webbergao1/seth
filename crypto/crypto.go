@@ -74,8 +74,8 @@ func S256() elliptic.Curve {
 }
 
 // PubkeyToAddress Get address from public key
-func PubkeyToAddress(p ecdsa.PublicKey) common.Address {
-	pubBytes := FromECDSAPub(&p)
+func PubkeyToAddress(p *ecdsa.PublicKey) common.Address {
+	pubBytes := FromECDSAPub(p)
 	return common.BytesToAddress(Keccak256(pubBytes[1:])[12:])
 }
 
@@ -147,6 +147,11 @@ func (sig *Signature) SetBytes(data []byte, compressed bool) {
 // RSV returns the r s v values
 func (sig *Signature) RSV() (v, r, s *big.Int) {
 	return new(big.Int).SetBytes(sig[:32]), new(big.Int).SetBytes(sig[32:64]), big.NewInt(int64(sig[64]))
+}
+
+// Verify verify the hash value
+func (sig *Signature) Verify(publickey *PublicKey, hash []byte) bool {
+	return secp256k1.VerifySignature(FromECDSAPub((*ecdsa.PublicKey)(publickey)), hash, sig[:64])
 }
 
 func zeroBytes(bytes []byte) {
