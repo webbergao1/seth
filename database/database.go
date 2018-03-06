@@ -5,6 +5,11 @@ import (
 	"seth/log"
 )
 
+const (
+	// LevelDBName name for levelname
+	LevelDBName string = "leveldb"
+)
+
 // Database interface of store
 type Database interface {
 	Name() string

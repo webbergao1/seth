@@ -15,7 +15,7 @@ func main() {
 	log.Info("Seth load config file %s", config.SethConfigFile)
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	log.Info("Processing. Please wait....")
-	args := append(os.Args, "newaccount")
+	args := append(os.Args, "genesis")
 
 	app := cli.NewApp()
 	app.Name = "seth"

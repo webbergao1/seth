@@ -5,7 +5,10 @@ import (
 	"fmt"
 	"os"
 	"seth/accounts"
+	"seth/config"
 	"seth/core"
+	"seth/database"
+	_ "seth/database/leveldb"
 	"seth/log"
 
 	cli "gopkg.in/urfave/cli.v1"
@@ -40,6 +43,8 @@ func (n *NodeCli) InitGenesis(c *cli.Context) error {
 	genesisparam := c.Args().First()
 	var genesis *core.Genesis
 	switch genesisparam {
+	case "":
+		genesis = core.DefaultGenesis()
 	case core.TagMainNetGenesis:
 		genesis = core.DefaultGenesis()
 	case core.TagTestNetGenesis:
@@ -58,9 +63,25 @@ func (n *NodeCli) InitGenesis(c *cli.Context) error {
 			log.Fatal("invalid genesis file: %v", err)
 			return err
 		}
-
 	}
-	return nil
+	datapath := config.ResolvePath("chaindata")
+	db, err := database.GetDatabase(database.LevelDBName)
+	if err != nil {
+		log.Fatal("get database error: %v", err)
+		return err
+	}
+	err = db.Open(datapath, 0, 0)
+	if err != nil {
+		log.Fatal("open database error: %v", err)
+		return err
+	}
+	defer db.Close()
+	hash, err := genesis.SetupGensisBlock(db)
+	log.Info("genesis block hash:%s", hash.Hex())
+	if err == core.ErrHasGenesisBlock {
+		log.Error("error: %v;exist genesis block hash:%s", err, hash.Hex())
+	}
+	return err
 }
 
 // Start start cmd for nodecli

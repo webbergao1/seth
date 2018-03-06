@@ -17,6 +17,7 @@ var Config _Config
 
 // _Config config for App
 type _Config struct {
+	Name    string `toml:"name"`
 	DataDir string `toml:"datadir"`
 }
 
@@ -46,4 +47,17 @@ func LoadConfig(filepath string) error {
 	log.Info("DataDir: %s", Config.DataDir)
 	return err
 
+}
+
+// ResolvePath return right path
+func ResolvePath(path string) string {
+	if filepath.IsAbs(path) {
+		return path
+	}
+	if Config.DataDir == "" {
+		return ""
+	}
+	fullpath := filepath.Join(Config.DataDir, Config.Name)
+	fullpath = filepath.Join(fullpath, path)
+	return fullpath
 }

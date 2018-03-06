@@ -10,10 +10,9 @@ import (
 )
 
 const (
-	levelDBName                string = "leveldb"
-	defaultFilterBits          int    = 10
-	defaultMincache            int    = 16
-	defaultMinOpenFilesHandles int    = 16
+	defaultFilterBits          int = 10
+	defaultMincache            int = 16
+	defaultMinOpenFilesHandles int = 16
 )
 
 type levelDB struct {
@@ -38,7 +37,7 @@ func NewLevelDB(path string, cache int, handles int) (database.Database, error) 
 
 // Name retuen regitser name
 func (db *levelDB) Name() string {
-	return levelDBName
+	return database.LevelDBName
 }
 
 // Open open level database
