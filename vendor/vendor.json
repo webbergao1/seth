@@ -45,6 +45,12 @@
 			"revisionTime": "2017-02-15T23:32:05Z"
 		},
 		{
+			"checksumSHA1": "sZBC82LlCP+qEu9/4rzKzgfEdIc=",
+			"path": "github.com/hashicorp/golang-lru",
+			"revision": "0fb14efe8c47ae851c0034ed7a448854d3d34cf3",
+			"revisionTime": "2018-02-01T23:52:37Z"
+		},
+		{
 			"checksumSHA1": "WtEzjODSs/UaFZBTuejMcCekY7Y=",
 			"path": "github.com/magiconair/properties/assert",
 			"revision": "2c9e9502788518c97fe44e8955cd069417ee89df",

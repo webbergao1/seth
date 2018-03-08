@@ -59,7 +59,7 @@ func Commands() []cli.Command {
 			Before:    n.init,
 			Action:    n.InitGenesis,
 			ShortName: "n",
-			Usage:     "new account return the account address&privatekey",
+			Usage:     "genesis mainnet/testnet/devnet to create genesis block",
 		},
 		cli.Command{
 			Name:      "start",

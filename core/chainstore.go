@@ -1,11 +1,13 @@
 package core
 
 import (
+	"bytes"
 	"encoding/binary"
 	"math/big"
 	"seth/common"
 	"seth/core/types"
 	"seth/database"
+	"seth/log"
 	"seth/rlp"
 )
 
@@ -102,4 +104,48 @@ func WriteHeadBlockHash(batch database.Batch, hash common.Hash) {
 // WriteChainConfig write chain config to db
 func WriteChainConfig(batch database.Batch, hash common.Hash, jsoncfg []byte) {
 	batch.Put(append(configPrefix, hash[:]...), jsoncfg)
+}
+
+// GetHeader get block by hash&block number
+func GetBlock(db database.Database, hash common.Hash, number uint64) *types.Block {
+	// Retrieve the block header and body contents
+	header := GetHeader(db, hash, number)
+	if header == nil {
+		return nil
+	}
+	body := GetBody(db, hash, number)
+	if body == nil {
+		return nil
+	}
+	return types.NewBlock(header, body.Transactions)
+}
+
+// GetHeader get block header by hash&block number
+func GetHeader(db database.Database, hash common.Hash, number uint64) *types.Header {
+	key := append(append(headerPrefix, encodeBlockNumber(number)...), hash.Bytes()...)
+	data, _ := db.Get(key)
+	if len(data) == 0 {
+		return nil
+	}
+	header := new(types.Header)
+	if err := rlp.Decode(bytes.NewReader(data), header); err != nil {
+		log.Error("Invalid block header RLP", "hash", hash, "err", err)
+		return nil
+	}
+	return header
+}
+
+// GetHeader get block body by hash&block number
+func GetBody(db database.Database, hash common.Hash, number uint64) *types.Body {
+	key := append(append(bodyPrefix, encodeBlockNumber(number)...), hash.Bytes()...)
+	data, _ := db.Get(key)
+	if len(data) == 0 {
+		return nil
+	}
+	body := new(types.Body)
+	if err := rlp.Decode(bytes.NewReader(data), body); err != nil {
+		log.Error("Invalid block body RLP", "hash", hash, "err", err)
+		return nil
+	}
+	return body
 }

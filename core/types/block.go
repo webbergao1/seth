@@ -103,6 +103,10 @@ func NewBlock(header *Header, txs []*Transaction) *Block {
 	return block
 }
 
+func NewBlockWithHeader(header *Header) *Block {
+	return &Block{Header: header.Clone(), td: new(big.Int)}
+}
+
 // Hash returns the keccak256 hash of block's header.
 func (b *Block) Hash() common.Hash {
 	if hash := b.hash.Load(); hash != nil {

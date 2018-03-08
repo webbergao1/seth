@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"math/big"
 	"os"
 	"path/filepath"
 	"seth/log"
@@ -17,8 +18,9 @@ var Config _Config
 
 // _Config config for App
 type _Config struct {
-	Name    string `toml:"name"`
-	DataDir string `toml:"datadir"`
+	Name    string   `toml:"name"`
+	DataDir string   `toml:"datadir"`
+	ChainID *big.Int `toml:"chainid"`
 }
 
 func init() {

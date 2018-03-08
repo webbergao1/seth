@@ -15,11 +15,11 @@ const (
 	// TagTestNetGenesis tag for test net genesis
 	TagTestNetGenesis = "testnet"
 	// TagDeveloperNetGenesis tag for developer net genesis
-	TagDeveloperNetGenesis = "dev"
+	TagDeveloperNetGenesis = "devnet"
 )
 
 var (
-	// ErrHashGenesisBlock error has genesis block in blockchain
+	// ErrHasGenesisBlock error has genesis block in blockchain
 	ErrHasGenesisBlock = errors.New("Found genesis block in blockchain")
 )
 
