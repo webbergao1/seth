@@ -20,14 +20,24 @@ func (s *Statedb) GetAmount(addr common.Address) *big.Int {
 	return common.Big0
 }
 
-// GetNonce get nonce of account
-func (s *Statedb) GetNonce(addr common.Address) uint64 {
-	return 0
-}
-
 // SetAmount set amount of account
 func (s *Statedb) SetAmount(addr common.Address, amount *big.Int) {
 
+}
+
+// AddAmount add amount for account
+func (s *Statedb) AddAmount(addr common.Address, amount *big.Int) {
+
+}
+
+// SubAmount sub amount for account
+func (s *Statedb) SubAmount(addr common.Address, amount *big.Int) {
+
+}
+
+// GetNonce get nonce of account
+func (s *Statedb) GetNonce(addr common.Address) uint64 {
+	return 0
 }
 
 // SetNonce set nonce of account

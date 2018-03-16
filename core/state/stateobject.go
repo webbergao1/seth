@@ -8,7 +8,7 @@ type Account struct {
 	Amount *big.Int
 }
 
-// NodeObject is state object for statedb
-type NodeObject struct {
+// StateObject is state object for statedb
+type StateObject struct {
 	account Account
 }
