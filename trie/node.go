@@ -1,7 +1,5 @@
 package trie
 
-import "seth/common"
-
 //NodeType define type NodeType
 type NodeType int8
 
@@ -18,7 +16,7 @@ const (
 
 // Noder interface for node
 type Noder interface {
-	Hash() common.Hash
+	Hash() []byte
 	IsDirty() bool
 }
 
@@ -53,14 +51,14 @@ type BranchNode struct {
 type hashNode []byte
 
 // Hash return the hash of node
-func (n hashNode) Hash() common.Hash { return common.BytesToHash(n) }
+func (n hashNode) Hash() []byte { return n }
 
 // IsDirty is node dirty
 func (n hashNode) IsDirty() bool { return false }
 
 // Hash return the hash of node
-func (n Node) Hash() common.Hash {
-	return common.BytesToHash(n.hash)
+func (n Node) Hash() []byte {
+	return n.hash
 }
 
 // IsDirty is node dirty
