@@ -1,17 +1,10 @@
 package trie
 
-//NodeType define type NodeType
-type NodeType int8
-
 const (
-	// NodeTypeNil node type nil, for error node
-	NodeTypeNil NodeType = 0
-	// NodeTypeExtend is extend node type
-	NodeTypeExtend NodeType = 1
-	// NodeTypeLeaf is leaf node type
-	NodeTypeLeaf NodeType = 2
-	// NodeTypeBranch is branch node type
-	NodeTypeBranch NodeType = 3
+	// NumberChildren number children in branch node
+	NumberChildren int = 17
+	// LengthOfNodeHash length of node hash
+	LengthOfNodeHash int = 32
 )
 
 // Noder interface for node
@@ -43,7 +36,7 @@ type LeafNode struct {
 // BranchNode is node for branch
 type BranchNode struct {
 	Node
-	Children [17]Noder
+	Children [NumberChildren]Noder
 }
 
 // hashNode is just used by nextnode of ExtendNode
