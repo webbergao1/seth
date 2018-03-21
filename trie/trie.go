@@ -13,7 +13,8 @@ import (
 )
 
 var (
-	errNodeFormat = errors.New("node format is invalid")
+	errNodeFormat   = errors.New("node format is invalid")
+	errNodeNotExist = errors.New("node not exist in db")
 )
 
 //Trie is a Merkle Patricia Trie
@@ -42,15 +43,14 @@ func NewTrie(root common.Hash, prefix []byte, db database.Database) (*Trie, erro
 	return trie, nil
 }
 
-// Update update [key,value] in the trie
-func (t *Trie) Update(key, value []byte) {
-
+// Put put [key,value] in the trie
+func (t *Trie) Put(key, value []byte) error {
 	key = keybytesToHex(key)
 	_, node, err := t.insert(t.root, key, value)
 	if err == nil {
 		t.root = node
 	}
-
+	return err
 }
 
 // Delete delete node with key in the trie
@@ -71,21 +71,16 @@ func (t *Trie) Get(key []byte) []byte {
 	key = keybytesToHex(key)
 	if t.root != nil {
 		val, _ := t.get(t.root, key, 0)
-		if val != nil && len(val) > 0 {
+		if len(val) > 0 {
 			return val
 		}
 		return nil
-	}
-	val, newroot := t.get(t.root, key, 0)
-	t.root = newroot
-	if val != nil && len(val) > 0 {
-		return val
 	}
 	return nil
 }
 
 // Hash return the hash of trie
-func (t Trie) Hash() common.Hash {
+func (t *Trie) Hash() common.Hash {
 	if t.root != nil {
 		buf := new(bytes.Buffer)
 		sha := sha3.NewKeccak256()
@@ -373,8 +368,8 @@ func (t *Trie) loadNode(hash []byte) (Noder, error) {
 	//TODO need cache nodes
 	key := append(t.prefix, hash...)
 	val, err := t.db.Get(key)
-	if err != nil || val == nil {
-		return nil, err
+	if err != nil || len(val) == 0 {
+		return nil, errNodeNotExist
 	}
 	return t.decodeNode(hash, val)
 }
