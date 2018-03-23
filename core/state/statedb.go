@@ -96,6 +96,7 @@ func (s *Statedb) Commit(batch database.Batch) (root common.Hash, err error) {
 				return common.Hash{}, err
 			}
 			s.trie.Put(addr[:], data)
+			object.dirty = false
 		}
 	}
 	return s.trie.Commit(batch)
