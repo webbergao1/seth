@@ -5,6 +5,7 @@ import (
 	crand "crypto/rand"
 	"encoding/hex"
 	"io"
+	"seth/common"
 	"seth/crypto"
 )
 
@@ -22,8 +23,18 @@ func NewAccount() (string, string, string) {
 	if err != nil {
 		return "", "", ""
 	}
-	address := crypto.PubkeyToAddress(key.PublicKey)
+	address := crypto.PubkeyToAddress(&key.PublicKey)
 	publickey := hex.EncodeToString(crypto.FromECDSAPub(&key.PublicKey))
 	Privatekey := hex.EncodeToString(crypto.FromECDSA(key))
 	return address.Hex(), publickey, Privatekey
+}
+
+// NewRandomAccount new random account return address&privatekey
+func NewRandomAccount() (common.Address, *crypto.PrivateKey) {
+	key, err := newKey(crand.Reader)
+	if err != nil {
+		return common.Address{}, nil
+	}
+	return crypto.PubkeyToAddress(&key.PublicKey), (*crypto.PrivateKey)(key)
+
 }

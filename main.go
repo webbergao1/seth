@@ -5,16 +5,17 @@ import (
 	"os"
 	"runtime"
 
+	"seth/config"
 	"seth/log"
 
 	cli "gopkg.in/urfave/cli.v1"
 )
 
 func main() {
-
+	log.Info("Seth load config file %s", config.SethConfigFile)
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	log.Info("Processing. Please wait....")
-	args := append(os.Args, "newaccount")
+	args := append(os.Args, "genesis")
 
 	app := cli.NewApp()
 	app.Name = "seth"
@@ -52,6 +53,13 @@ func Commands() []cli.Command {
 			Action:    n.NewAccount,
 			ShortName: "n",
 			Usage:     "new account return the account address&privatekey",
+		},
+		cli.Command{
+			Name:      "genesis",
+			Before:    n.init,
+			Action:    n.InitGenesis,
+			ShortName: "n",
+			Usage:     "genesis mainnet/testnet/devnet to create genesis block",
 		},
 		cli.Command{
 			Name:      "start",
